@@ -5,6 +5,10 @@ import org.example.model.ElementInfo;
 public class XPathGenerator {
     public String generate(ElementInfo element){
 
+        //data-id
+        if(isValid(element.getDataId())){
+            return "//*[@data-id='"+element.getDataId()+"']";
+        }
         if(isValid(element.getId()) && !isDynamic(element.getId())){
             return "//*[@id='"+element.getId()+"']";
         }
@@ -19,6 +23,16 @@ public class XPathGenerator {
         if(isValid(element.getName())){
             return "//*[@name='"+element.getName()+"']";
         }
+
+        //placeholder
+        if(isValid(element.getPlaceholder())){
+            return "//*[@placeholder='"+element.getPlaceholder()+"']";
+        }
+        // className
+        if(isValid(element.getClassName())){
+            return "//*[contains(@class,'"+element.getClassName()+"')]";
+        }
+
         if(element.getText()!=null && !element.getText().isEmpty()){
             return "//"+element.getTagName()+"[contains(text(),'"+element.getText().trim()+"')]";
         }

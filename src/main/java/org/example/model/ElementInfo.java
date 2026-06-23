@@ -1,16 +1,25 @@
 package org.example.model;
 
+import lombok.Getter;
+
 public class ElementInfo {
 
     private String tagName;
     private String id;
     private String name;
     private String text;
-    public ElementInfo(String tagName, String id, String name, String text) {
+    private String placeholder;
+    private String dataId;
+    private String className;
+    public ElementInfo(String tagName, String id, String name, String text,String placeholder,
+                       String dataId,String className) {
         this.tagName = tagName;
         this.id = id;
         this.name = name;
         this.text = text;
+        this.className=className;
+        this.dataId=dataId;
+        this.placeholder=placeholder;
     }
 
     public String getTagName() {
@@ -27,5 +36,14 @@ public class ElementInfo {
 
     public String getText() {
         return text;
+    }
+    public String getPlaceholder(){
+        return placeholder;
+    }
+    public String getDataId(){
+        return dataId;
+    }
+    public String getClassName(){
+        return className;
     }
 }
