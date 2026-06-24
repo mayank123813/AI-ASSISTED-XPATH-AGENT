@@ -2,41 +2,48 @@ package org.example.generator;
 
 import org.example.model.ElementInfo;
 
-public class XPathGenerator {
-    public String generate(ElementInfo element){
+import java.util.ArrayList;
+import java.util.List;
 
+public class XPathGenerator {
+    public List<String> generate(ElementInfo element){
+
+        List<String> locators = new ArrayList<>();
         //data-id
         if(isValid(element.getDataId())){
-            return "//*[@data-id='"+element.getDataId()+"']";
+            locators.add("//*[@data-id='"+element.getDataId()+"']");
         }
         if(isValid(element.getId()) && !isDynamic(element.getId())){
-            return "//*[@id='"+element.getId()+"']";
+             locators.add("//*[@id='"+element.getId()+"']");
         }
 
         if(isValid(element.getId()) && isDynamic(element.getId())){
             String stablePart=getStablePart(element.getId());
             if(!stablePart.isEmpty()){
-                return "//*[contains(@id,'"+stablePart+"')]";
+                locators.add("//*[contains(@id,'"+stablePart+"')]");
             }
         }
 
         if(isValid(element.getName())){
-            return "//*[@name='"+element.getName()+"']";
+            locators.add("//*[@name='"+element.getName()+"']");
         }
 
         //placeholder
         if(isValid(element.getPlaceholder())){
-            return "//*[@placeholder='"+element.getPlaceholder()+"']";
+            locators.add("//*[@placeholder='"+element.getPlaceholder()+"']");
         }
         // className
         if(isValid(element.getClassName())){
-            return "//*[contains(@class,'"+element.getClassName()+"')]";
+            locators.add("//*[contains(@class,'"+element.getClassName()+"')]");
         }
 
         if(element.getText()!=null && !element.getText().isEmpty()){
-            return "//"+element.getTagName()+"[contains(text(),'"+element.getText().trim()+"')]";
+            locators.add("//"+element.getTagName()+"[contains(text(),'"+element.getText().trim()+"')]");
         }
-        return "//"+element.getTagName();
+        else{
+            locators.add("//"+element.getTagName());
+        }
+        return locators;
     }
 
     private boolean isValid(String value){
