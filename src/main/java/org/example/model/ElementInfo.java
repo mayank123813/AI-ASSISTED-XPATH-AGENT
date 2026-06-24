@@ -46,4 +46,10 @@ public class ElementInfo {
     public String getClassName(){
         return className;
     }
+    @Override
+    public  String toString() {
+        return "ElementInfo{" + "tagName='" + tagName + '\'' + ", id='" + id + '\'' + ", " +
+                "name='" + name + '\'' + ", text='" + text + '\'' + ", placeholder='" +
+                placeholder + '\'' + ", dataId='" + dataId + '\'' + ", className='" + className + '\'' + '}';
+    }
 }
