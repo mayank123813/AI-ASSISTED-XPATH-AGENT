@@ -11,4 +11,7 @@ public class XpathValidator {
         List<WebElement> list = driver.findElements(By.xpath(xpath));
         return list.size()==1;
     }
+    public static int getMatchCount(WebDriver driver,String xpath){
+        return driver.findElements(By.xpath(xpath)).size();
+    }
 }

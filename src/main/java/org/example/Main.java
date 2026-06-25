@@ -30,8 +30,8 @@ public class Main {
 
             Elements inputs = doc.select("input");
 
-            for (Element input : inputs) {
-
+            for(int i=0;i<inputs.size();i++) {
+                Element input = inputs.get(i);
                 ElementInfo elementInfo = new ElementInfo(
                         input.tagName(),
                         input.id(),
@@ -39,33 +39,37 @@ public class Main {
                         input.text(),
                         input.attr("placeholder"),
                         input.attr("data-id"),
-                        input.className()
+                        input.className(),i+1
                 );
-
                 List<String> locators =
                         generator.generate(elementInfo);
-
                 String finalXpath = null;
-
                 for (String xpath : locators) {
-
                     boolean unique =
                             XpathValidator.isUnique(driver, xpath);
-
+                    int count = XpathValidator.getMatchCount(driver,xpath);
                     System.out.println("Trying -> " + xpath);
                     System.out.println("Unique -> " + unique);
-
+                    System.out.println("Count ->"+count);
                     if (unique) {
                         finalXpath = xpath;
                         break;
                     }
                 }
+                if(finalXpath == null){
 
+                    finalXpath =
+                            generator.generateIndexedXpath(
+                                    elementInfo);
+
+                    System.out.println(
+                            "Fallback XPath -> "
+                                    + finalXpath);
+                }
                 System.out.println("Element -> " + elementInfo);
                 System.out.println("Final XPath -> " + finalXpath);
                 System.out.println("--------------------------------");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
