@@ -10,7 +10,9 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -30,8 +32,41 @@ public class Main {
 
             Elements inputs = doc.select("input");
 
+            Map<String,Integer> occurrenceMap =
+                    new HashMap<>();
+
+
             for(int i=0;i<inputs.size();i++) {
+
                 Element input = inputs.get(i);
+                String key;
+
+                if(!input.attr("name").isEmpty()){
+
+                    key = "NAME:" + input.attr("name");
+
+                }
+                else if(!input.id().isEmpty()){
+
+                    key = "ID:" + input.id();
+
+                }
+                else if(!input.attr("placeholder").isEmpty()){
+
+                    key = "PLACEHOLDER:" +
+                            input.attr("placeholder");
+
+                }
+                else{
+
+                    key = "TAG:" + input.tagName();
+
+                }
+                int occurrence =
+                        occurrenceMap.getOrDefault(
+                                key,
+                                0
+                        ) + 1;
                 ElementInfo elementInfo = new ElementInfo(
                         input.tagName(),
                         input.id(),
@@ -39,7 +74,13 @@ public class Main {
                         input.text(),
                         input.attr("placeholder"),
                         input.attr("data-id"),
-                        input.className(),i+1
+                        input.className(),occurrence
+                );
+
+
+                occurrenceMap.put(
+                        key,
+                        occurrence
                 );
                 List<String> locators =
                         generator.generate(elementInfo);

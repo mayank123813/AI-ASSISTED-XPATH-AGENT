@@ -76,6 +76,12 @@ public class XPathGenerator {
 
     public String generateIndexedXpath(
             ElementInfo element){
+        if(!element.getId().isEmpty()){
+
+            return "(//*[@id='"
+                    + element.getId()
+                    + "'])[1]";
+        }
 
         if(!element.getName().isEmpty()){
 
@@ -86,6 +92,32 @@ public class XPathGenerator {
                     + "]";
         }
 
-        return null;
+        if(!element.getPlaceholder().isEmpty()){
+
+            return "(//*[@placeholder='"
+                    + element.getPlaceholder()
+                    + "'])["
+                    + element.getPosition()
+                    + "]";
+        }
+
+        if(!element.getClassName().isEmpty()){
+
+            String cls =
+                    element.getClassName().split(" ")[0];
+
+            return "(//*[contains(@class,'"
+                    + cls
+                    + "')])["
+                    + element.getPosition()
+                    + "]";
+        }
+
+        return "(//"
+                + element.getTagName()
+                + ")["
+                + element.getPosition()
+                + "]";
+
     }
 }
