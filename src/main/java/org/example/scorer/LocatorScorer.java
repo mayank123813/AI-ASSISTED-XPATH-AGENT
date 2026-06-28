@@ -1,54 +1,57 @@
 package org.example.scorer;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class LocatorScorer {
-    private final Map<String, Integer> attributeScores = new HashMap<>();
-
-    public LocatorScorer() {
-
-        attributeScores.put("id", 100);
-        attributeScores.put("data-id", 95);
-        attributeScores.put("name", 90);
-        attributeScores.put("placeholder", 70);
-        attributeScores.put("text", 60);
-        attributeScores.put("class", 40);
-        attributeScores.put("tag", 10);
-    }
 
     public int calculateScore(String xpath) {
 
-        int score = 0;
+        int baseScore = 0;
+        int bonus = 0;
 
+        // Highest priority attribute
         if (xpath.contains("@id")) {
-            score += attributeScores.get("id");
+            baseScore = Math.max(baseScore, 100);
         }
 
         if (xpath.contains("@data-id")) {
-            score += attributeScores.get("data-id");
+            if (baseScore == 0)
+                baseScore = 95;
+            else
+                bonus += 5;
         }
 
         if (xpath.contains("@name")) {
-            score += attributeScores.get("name");
+            if (baseScore == 0)
+                baseScore = 90;
+            else
+                bonus += 5;
         }
 
         if (xpath.contains("@placeholder")) {
-            score += attributeScores.get("placeholder");
+            if (baseScore == 0)
+                baseScore = 70;
+            else
+                bonus += 5;
         }
 
         if (xpath.contains("text()")) {
-            score += attributeScores.get("text");
+            if (baseScore == 0)
+                baseScore = 60;
+            else
+                bonus += 5;
         }
 
         if (xpath.contains("contains(@class")) {
-            score += attributeScores.get("class");
+            if (baseScore == 0)
+                baseScore = 40;
+            else
+                bonus += 5;
         }
 
-        // Penalize indexed XPath
+        // Indexed XPath is least preferred
         if (xpath.matches("^\\(.*\\)\\[\\d+\\]$")) {
-            score -= 30;
+            baseScore -= 20;
         }
-        return score;
+
+        return baseScore + bonus;
     }
 }
