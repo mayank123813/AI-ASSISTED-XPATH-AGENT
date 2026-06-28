@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.generator.XPathGenerator;
 import org.example.model.ElementInfo;
+import org.example.scorer.LocatorScorer;
 import org.example.validator.XpathValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +24,7 @@ public class Main {
         try {
 
             XPathGenerator generator = new XPathGenerator();
+            LocatorScorer scorer=new LocatorScorer();
 
             driver.get("https://selectorshub.com/xpath-practice-page/");
 
@@ -84,32 +86,48 @@ public class Main {
                 );
                 List<String> locators =
                         generator.generate(elementInfo);
-                String finalXpath = null;
+
+                String bestXpath = null;
+                int bestScore = -1;
+
                 for (String xpath : locators) {
+
                     boolean unique =
                             XpathValidator.isUnique(driver, xpath);
-                    int count = XpathValidator.getMatchCount(driver,xpath);
+
+                    int count =
+                            XpathValidator.getMatchCount(driver, xpath);
+
                     System.out.println("Trying -> " + xpath);
                     System.out.println("Unique -> " + unique);
-                    System.out.println("Count ->"+count);
+                    System.out.println("Count -> " + count);
+
                     if (unique) {
-                        finalXpath = xpath;
-                        break;
+
+                        int score =
+                                scorer.calculateScore(xpath);
+
+                        System.out.println("Score -> " + score);
+
+                        if (score > bestScore) {
+
+                            bestScore = score;
+                            bestXpath = xpath;
+                        }
                     }
                 }
-                if(finalXpath == null){
 
-                    finalXpath =
-                            generator.generateIndexedXpath(
-                                    elementInfo);
+                if (bestXpath == null) {
 
-                    System.out.println(
-                            "Fallback XPath -> "
-                                    + finalXpath);
+                    bestXpath =
+                            generator.generateIndexedXpath(elementInfo);
+
+                    System.out.println("Fallback XPath -> " + bestXpath);
                 }
+
                 System.out.println("Element -> " + elementInfo);
-                System.out.println("Final XPath -> " + finalXpath);
-                System.out.println("--------------------------------");
+                System.out.println("Best XPath -> " + bestXpath);
+                System.out.println("Best Score -> " + bestScore);
             }
         } catch (Exception e) {
             e.printStackTrace();
