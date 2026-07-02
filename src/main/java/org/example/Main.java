@@ -1,5 +1,6 @@
 package org.example;
 
+
 import org.example.generator.XPathGenerator;
 import org.example.model.ElementInfo;
 import org.example.scorer.LocatorScorer;
@@ -14,8 +15,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Main {
+    private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
 
